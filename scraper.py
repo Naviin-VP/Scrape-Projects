@@ -1,7 +1,7 @@
 """
 Payer Policy Document Discovery Crawler
 
-Author: Naviin V P
+Author: Navin V P
 
 Purpose:
     Discover public payer medical policies, prior authorization,
@@ -406,7 +406,10 @@ def document_row(payer, alias, url, source, path, response):
         methods.append("url_pattern")
 
     if is_pdf:
-        title, body = parse_pdf(content)
+        pdf_result = parse_pdf(content)
+        title, body = pdf_result[0], pdf_result[1]
+        if len(pdf_result) > 2 and pdf_result[2]:
+            methods.append(str(pdf_result[2]))
         methods.extend(["pdf_metadata", "pdf_text"])
     else:
         title = title_from_html(response.text)
@@ -434,10 +437,14 @@ def document_row(payer, alias, url, source, path, response):
     strong_signal = classify(" ".join([final_url, title]))
     confidence = 0.95 if strong_signal else 0.80
 
+    region_value, region_method = state_or_region(body[:8000], final_url, title)
+    if region_method:
+        methods.append(region_method)
+
     return {
         "payer_name": payer,
         "payer_alias": alias,
-        "state_or_region": state_or_region(body[:8000], final_url),
+        "state_or_region": region_value,
         "line_of_business": line_of_business(" ".join([final_url, title, body[:3000]])),
         "document_title": title,
         "document_type": kind,
@@ -522,6 +529,22 @@ def save_csv(rows, csv_file):
     atomic_replace(csv_tmp, csv_file)
 
 
+def excel_value(value):
+    """Convert any unexpected structured value into an Excel-safe scalar."""
+    if value is None:
+        return ""
+    if isinstance(value, (str, int, float, bool)):
+        return value
+    if isinstance(value, (tuple, list, set)):
+        return " | ".join(str(excel_value(v)) for v in value if v is not None)
+    if isinstance(value, dict):
+        return " | ".join(
+            f"{key}={excel_value(val)}" for key, val in value.items()
+        )
+    return str(value)
+
+
+
 def save(rows, csv_file, xlsx_file):
     """Write CSV/XLSX atomically so an interruption does not corrupt the last checkpoint."""
     xlsx_tmp = xlsx_file + ".tmp"
@@ -533,7 +556,7 @@ def save(rows, csv_file, xlsx_file):
     ws.title = "documents"
     ws.append(COLUMNS)
     for row in rows:
-        ws.append([row.get(column, "") for column in COLUMNS])
+        ws.append([excel_value(row.get(column, "")) for column in COLUMNS])
     wb.save(xlsx_tmp)
     atomic_replace(xlsx_tmp, xlsx_file)
 
@@ -581,19 +604,30 @@ def save_summary(summary, summary_file):
 
 def checkpoint(rows, summary, stamp, completed_payers, current_payer=None,
                state_status="running", write_xlsx=False):
-    """Persist everything collected so far.
-
-    This is intentionally called throughout the crawl, not only at the end.
-    """
+    """Persist collected data safely at every checkpoint."""
     rows_sorted = list(rows.values()) if isinstance(rows, dict) else list(rows)
+
+    # Guarantee every schema value is a scalar before any file writer sees it.
+    rows_sorted = [
+        {column: excel_value(row.get(column, "")) for column in COLUMNS}
+        for row in rows_sorted
+    ]
     rows_sorted.sort(key=lambda x: (x["payer_name"], x["document_url"]))
 
-    # Always create the CSV and summary. XLSX is refreshed on document
-    # discoveries and run boundaries to avoid expensive rewrites on every
-    # failed/skipped URL.
+    # CSV is the primary durable checkpoint.
     save_csv(rows_sorted, RUN_FILES["csv"])
+
+    # XLSX is secondary. Never let an XLSX problem destroy the CSV/state/summary.
     if write_xlsx or not os.path.exists(RUN_FILES["xlsx"]):
-        save(rows_sorted, RUN_FILES["csv"], RUN_FILES["xlsx"])
+        try:
+            save(rows_sorted, RUN_FILES["csv"], RUN_FILES["xlsx"])
+        except Exception as exc:
+            print_log(
+                "output.warning",
+                "ALL",
+                output="xlsx",
+                error=f"{type(exc).__name__}: {exc}"
+            )
 
     summary["totals"]["rows_written"] = len(rows_sorted)
     summary["run"]["status"] = state_status
@@ -617,6 +651,8 @@ def checkpoint(rows, summary, stamp, completed_payers, current_payer=None,
         "rows_written": len(rows_sorted),
         "last_checkpoint_utc": now()
     })
+
+
 
 
 RUN_FILES = {}
