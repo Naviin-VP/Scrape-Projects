@@ -1,0 +1,138 @@
+{
+  "run": {
+    "started_at_utc": "2026-09-28T14:03:22Z",
+    "status": "completed",
+    "payer_count": 10,
+    "last_checkpoint_utc": "2026-09-28T14:30:40Z",
+    "files": {
+      "csv": "Output_PayerPolicyDocumentDiscovery_20260928_140322.csv",
+      "xlsx": "Output_PayerPolicyDocumentDiscovery_20260928_140322.xlsx",
+      "log": "Run_Log_PayerPolicyDocumentDiscovery_20260928_140322.jsonl",
+      "summary": "Summary_PayerPolicyDocumentDiscovery_20260928_140322.json"
+    },
+    "finished_at_utc": "2026-09-28T14:30:40Z"
+  },
+  "payers": [
+    {
+      "payer_name": "UHC",
+      "attempted": 101,
+      "found": 50,
+      "failed": 51,
+      "skipped": 0,
+      "pages_discovered": 20,
+      "candidate_documents": 101,
+      "robots_blocked": 0,
+      "elapsed_seconds": 280.96
+    },
+    {
+      "payer_name": "Horizon BCBS NJ",
+      "attempted": 0,
+      "found": 0,
+      "failed": 0,
+      "skipped": 0,
+      "pages_discovered": 1,
+      "candidate_documents": 0,
+      "robots_blocked": 0,
+      "elapsed_seconds": 2.14
+    },
+    {
+      "payer_name": "Cigna",
+      "attempted": 127,
+      "found": 109,
+      "failed": 18,
+      "skipped": 2,
+      "pages_discovered": 16,
+      "candidate_documents": 129,
+      "robots_blocked": 2,
+      "elapsed_seconds": 1086.4
+    },
+    {
+      "payer_name": "UPMC Health Plan",
+      "attempted": 9,
+      "found": 0,
+      "failed": 9,
+      "skipped": 0,
+      "pages_discovered": 27,
+      "candidate_documents": 9,
+      "robots_blocked": 0,
+      "elapsed_seconds": 87.97
+    },
+    {
+      "payer_name": "Elevance/Anthem",
+      "attempted": 1,
+      "found": 0,
+      "failed": 1,
+      "skipped": 0,
+      "pages_discovered": 23,
+      "candidate_documents": 1,
+      "robots_blocked": 0,
+      "elapsed_seconds": 33.98
+    },
+    {
+      "payer_name": "CareSource",
+      "attempted": 0,
+      "found": 0,
+      "failed": 0,
+      "skipped": 1,
+      "pages_discovered": 0,
+      "candidate_documents": 0,
+      "robots_blocked": 0,
+      "elapsed_seconds": 0.53
+    },
+    {
+      "payer_name": "Centene",
+      "attempted": 13,
+      "found": 0,
+      "failed": 13,
+      "skipped": 0,
+      "pages_discovered": 30,
+      "candidate_documents": 13,
+      "robots_blocked": 0,
+      "elapsed_seconds": 60.23
+    },
+    {
+      "payer_name": "Geisinger",
+      "attempted": 0,
+      "found": 0,
+      "failed": 0,
+      "skipped": 0,
+      "pages_discovered": 1,
+      "candidate_documents": 0,
+      "robots_blocked": 0,
+      "elapsed_seconds": 5.3
+    },
+    {
+      "payer_name": "Highmark",
+      "attempted": 15,
+      "found": 1,
+      "failed": 14,
+      "skipped": 0,
+      "pages_discovered": 26,
+      "candidate_documents": 15,
+      "robots_blocked": 0,
+      "elapsed_seconds": 79.18
+    },
+    {
+      "payer_name": "BCBST",
+      "attempted": 0,
+      "found": 0,
+      "failed": 0,
+      "skipped": 1,
+      "pages_discovered": 0,
+      "candidate_documents": 0,
+      "robots_blocked": 0,
+      "elapsed_seconds": 0.38
+    }
+  ],
+  "totals": {
+    "attempted": 266,
+    "found": 160,
+    "failed": 106,
+    "skipped": 4,
+    "rows_written": 160
+  },
+  "validation": {
+    "status": "PASS",
+    "errors": []
+  }
+}
