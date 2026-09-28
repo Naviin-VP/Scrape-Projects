@@ -31,10 +31,10 @@ Scrape-Projects/
 Each run creates:
 
 ```text
-PayerPolicyDocumentDiscovery_YYYYMMDD_HHMMSS.csv
-PayerPolicyDocumentDiscovery_YYYYMMDD_HHMMSS.xlsx
-PayerPolicyDocumentDiscovery_YYYYMMDD_HHMMSS_run_log.jsonl
-PayerPolicyDocumentDiscovery_YYYYMMDD_HHMMSS_summary.json
+Output_PayerPolicyDocumentDiscovery_YYYYMMDD_HHMMSS.csv
+Output_PayerPolicyDocumentDiscovery_YYYYMMDD_HHMMSS.xlsx
+Run_Log_PayerPolicyDocumentDiscovery_YYYYMMDD_HHMMSS_run_log.jsonl
+Summary_PayerPolicyDocumentDiscovery_YYYYMMDD_HHMMSS_summary.json
 ```
 
 ## Setup
