@@ -102,10 +102,10 @@ def run_stamp():
 def make_run_files(stamp):
     prefix = f"{PROJECT_NAME}_{stamp}"
     return {
-        "csv": os.path.join(BASE, f"{prefix}.csv"),
-        "xlsx": os.path.join(BASE, f"{prefix}.xlsx"),
-        "log": os.path.join(BASE, f"{prefix}_run_log.jsonl"),
-        "summary": os.path.join(BASE, f"{prefix}_summary.json"),
+        "csv": os.path.join(BASE, f"Output_{prefix}.csv"),
+        "xlsx": os.path.join(BASE, f"Output_{prefix}.xlsx"),
+        "log": os.path.join(BASE, f"Run_Log_{prefix}.jsonl"),
+        "summary": os.path.join(BASE, f"Summary_{prefix}.json"),
     }
 
 
